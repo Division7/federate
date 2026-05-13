@@ -4,7 +4,7 @@ WORKDIR /home/app
 
 COPY . .
 
-RUN mvn --no-transfer-progress -B -Pproduction -DskipTests -f /home/app/pom.xml clean package
+RUN mvn -Dkotlin.compiler.execution.strategy=in-process --no-transfer-progress -B -Pproduction -DskipTests -f /home/app/pom.xml clean package
 
 ENTRYPOINT ["mvn", "spring-boot:run"]
 
