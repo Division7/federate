@@ -6,6 +6,6 @@ COPY . .
 
 RUN mvn -Dkotlin.compiler.execution.strategy=in-process --no-transfer-progress -B -Pproduction -DskipTests -f /home/app/pom.xml clean package
 
-ENTRYPOINT ["mvn", "spring-boot:run"]
+ENTRYPOINT ["java", "-jar", "federate-0.0.1-SNAPSHOT.jar"]
 
 
