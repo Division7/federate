@@ -2,7 +2,6 @@ package edu.ucsb.federate.authentication;
 
 import edu.ucsb.federate.entities.UserEntity;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +26,7 @@ public class ApiKeyUser implements User, OAuth2AuthenticatedPrincipal {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of();
+    return authorities;
   }
 
   @Override
