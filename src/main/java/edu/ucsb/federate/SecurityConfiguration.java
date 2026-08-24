@@ -65,6 +65,10 @@ class SecurityConfiguration {
         )
         .httpBasic(AbstractHttpConfigurer::disable)
         .oauth2Login(oidc -> oidc.userInfoEndpoint(info -> info.oidcUserService(service)))
+        /*
+        Resource server must be placed above authorization server
+        https://github.com/spring-projects/spring-security/issues/16406#issuecomment-2593143711
+        */
         .oauth2ResourceServer(
             resourceServer -> resourceServer.opaqueToken(Customizer.withDefaults())
         )
