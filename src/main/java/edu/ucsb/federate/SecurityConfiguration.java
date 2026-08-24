@@ -1,6 +1,7 @@
 package edu.ucsb.federate;
 
 import edu.ucsb.federate.authentication.SidRetrievalStrategyCustomImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.AclCache;
 import org.springframework.security.acls.model.AclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
+import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,6 +45,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -62,16 +65,19 @@ class SecurityConfiguration {
         )
         .httpBasic(AbstractHttpConfigurer::disable)
         .oauth2Login(oidc -> oidc.userInfoEndpoint(info -> info.oidcUserService(service)))
+        .oauth2ResourceServer(
+            resourceServer -> resourceServer.opaqueToken(Customizer.withDefaults())
+        )
         .oauth2AuthorizationServer(
-            authorizationServer -> authorizationServer.oidc(Customizer.withDefaults())
+            authorizationServer -> {
+               authorizationServer.oidc(Customizer.withDefaults());
+               http.securityMatcher(authorizationServer.getEndpointsMatcher());
+            }
         ).exceptionHandling(
             handler -> handler.defaultAuthenticationEntryPointFor(
                 new LoginUrlAuthenticationEntryPoint("/login"),
                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
             )
-        )
-        .oauth2ResourceServer(
-            resourceServer -> resourceServer.opaqueToken(Customizer.withDefaults())
         );
     return http.build();
   }
@@ -100,13 +106,15 @@ class SecurityConfiguration {
    */
   @Bean
   @Order(2)
-  public SecurityFilterChain stateless(HttpSecurity http) throws Exception {
+  public SecurityFilterChain stateless(HttpSecurity http, AuthenticationManagerResolver<HttpServletRequest> tokenMatcher) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .securityMatcher("/api/programmatic/**")
         .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
         .httpBasic(AbstractHttpConfigurer::disable)
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(Customizer.withDefaults());
+        .oauth2ResourceServer(
+            server -> server.authenticationManagerResolver(tokenMatcher)
+        );
     return http.build();
   }
 
