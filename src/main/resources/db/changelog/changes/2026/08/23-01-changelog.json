@@ -1,0 +1,175 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1787470466067-5",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createSequence": {
+              "incrementBy": 50,
+              "sequenceName": "credential_blueprint_seq",
+              "startValue": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787470466067-6",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "pk_credentialblueprint"
+                    },
+                    "name": "id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "creator_id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "github_organization",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "credential_blueprint"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787470466067-7",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "credential_blueprint_id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "domain_regex",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "domain_regex"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787470466067-8",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "credential_blueprint_id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "repo_regex",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "repo_regex"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787470466067-9",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "creator_id",
+              "baseTableName": "credential_blueprint",
+              "constraintName": "FK_CREDENTIALBLUEPRINT_ON_CREATOR",
+              "referencedColumnNames": "id",
+              "referencedTableName": "users"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787470466067-10",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "credential_blueprint_id",
+              "baseTableName": "domain_regex",
+              "constraintName": "fk_domain_regex_on_credential_blueprint",
+              "referencedColumnNames": "id",
+              "referencedTableName": "credential_blueprint"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787470466067-11",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "credential_blueprint_id",
+              "baseTableName": "repo_regex",
+              "constraintName": "fk_repo_regex_on_credential_blueprint",
+              "referencedColumnNames": "id",
+              "referencedTableName": "credential_blueprint"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

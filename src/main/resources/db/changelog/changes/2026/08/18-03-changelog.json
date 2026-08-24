@@ -1,0 +1,165 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1787122592311-1",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createSequence": {
+              "incrementBy": 50,
+              "sequenceName": "users_seq",
+              "startValue": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787122592311-2",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "pk_users"
+                    },
+                    "name": "id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "email",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "google_sub",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "picture_url",
+                    "type": "VARCHAR(2048)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "full_name",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "given_name",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "family_name",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "github_id",
+                    "type": "INT"
+                  }
+                }
+              ],
+              "tableName": "users"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787122592311-3",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addUniqueConstraint": {
+              "columnNames": "email",
+              "constraintName": "user_unique_email",
+              "tableName": "users"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787122592311-4",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addUniqueConstraint": {
+              "columnNames": "google_sub",
+              "constraintName": "user_unique_google_sub",
+              "tableName": "users"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787122592311-5",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createIndex": {
+              "columns": [
+                {
+                  "column": {
+                    "name": "email"
+                  }
+                }
+              ],
+              "indexName": "user_index_email",
+              "tableName": "users"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787122592311-6",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createIndex": {
+              "columns": [
+                {
+                  "column": {
+                    "name": "google_sub"
+                  }
+                }
+              ],
+              "indexName": "user_index_google_sub",
+              "tableName": "users"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,468 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1787095187650-1",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createSequence": {
+              "incrementBy": 1,
+              "sequenceName": "acl_class_id_seq",
+              "startValue": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-2",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createSequence": {
+              "incrementBy": 1,
+              "sequenceName": "acl_entry_id_seq",
+              "startValue": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-3",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createSequence": {
+              "incrementBy": 1,
+              "sequenceName": "acl_object_identity_id_seq",
+              "startValue": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-4",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createSequence": {
+              "incrementBy": 1,
+              "sequenceName": "acl_sid_id_seq",
+              "startValue": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-12",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "acl_class_pkey"
+                    },
+                    "name": "id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "class",
+                    "type": "VARCHAR(100)"
+                  }
+                }
+              ],
+              "tableName": "acl_class"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-13",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "acl_entry_pkey"
+                    },
+                    "name": "id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "acl_object_identity",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ace_order",
+                    "type": "INT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "sid",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "mask",
+                    "type": "INT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "granting",
+                    "type": "BOOLEAN"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "audit_success",
+                    "type": "BOOLEAN"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "audit_failure",
+                    "type": "BOOLEAN"
+                  }
+                }
+              ],
+              "tableName": "acl_entry"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-14",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "acl_object_identity_pkey"
+                    },
+                    "name": "id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "object_id_class",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "object_id_identity",
+                    "type": "VARCHAR(36)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "parent_object",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "owner_sid",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "entries_inheriting",
+                    "type": "BOOLEAN"
+                  }
+                }
+              ],
+              "tableName": "acl_object_identity"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-15",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "acl_sid_pkey"
+                    },
+                    "name": "id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "principal",
+                    "type": "BOOLEAN"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "sid",
+                    "type": "VARCHAR(100)"
+                  }
+                }
+              ],
+              "tableName": "acl_sid"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-29",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addUniqueConstraint": {
+              "columnNames": "sid, principal",
+              "constraintName": "unique_uk_1",
+              "tableName": "acl_sid"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-30",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addUniqueConstraint": {
+              "columnNames": "class",
+              "constraintName": "unique_uk_2",
+              "tableName": "acl_class"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-31",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addUniqueConstraint": {
+              "columnNames": "object_id_class, object_id_identity",
+              "constraintName": "unique_uk_3",
+              "tableName": "acl_object_identity"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-32",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addUniqueConstraint": {
+              "columnNames": "acl_object_identity, ace_order",
+              "constraintName": "unique_uk_4",
+              "tableName": "acl_entry"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-33",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "parent_object",
+              "baseTableName": "acl_object_identity",
+              "constraintName": "foreign_fk_1",
+              "onDelete": "NO ACTION",
+              "referencedColumnNames": "id",
+              "referencedTableName": "acl_object_identity"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-34",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "object_id_class",
+              "baseTableName": "acl_object_identity",
+              "constraintName": "foreign_fk_2",
+              "onDelete": "NO ACTION",
+              "referencedColumnNames": "id",
+              "referencedTableName": "acl_class"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-35",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "owner_sid",
+              "baseTableName": "acl_object_identity",
+              "constraintName": "foreign_fk_3",
+              "onDelete": "NO ACTION",
+              "referencedColumnNames": "id",
+              "referencedTableName": "acl_sid"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-36",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "acl_object_identity",
+              "baseTableName": "acl_entry",
+              "constraintName": "foreign_fk_4",
+              "onDelete": "NO ACTION",
+              "referencedColumnNames": "id",
+              "referencedTableName": "acl_object_identity"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787095187650-37",
+        "author": "Division7",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "sid",
+              "baseTableName": "acl_entry",
+              "constraintName": "foreign_fk_5",
+              "onDelete": "NO ACTION",
+              "referencedColumnNames": "id",
+              "referencedTableName": "acl_sid"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
