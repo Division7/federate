@@ -1,5 +1,8 @@
 package edu.ucsb.federate.authentication;
 
+import edu.ucsb.federate.entities.UserEntity;
+import org.springframework.security.acls.domain.PrincipalSid;
+
 public interface User {
 
 
@@ -10,5 +13,8 @@ public interface User {
   public String getFullName();
   public String getGivenName();
   public String getFamilyName();
-
+  public UserEntity toEntity();
+  public PrincipalSid getSid();
+  public boolean isAdmin();
+  public boolean isManager();
 }

@@ -2,6 +2,7 @@ package edu.ucsb.federate;
 
 import edu.ucsb.federate.authentication.SidRetrievalStrategyCustomImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.acls.AclPermissionEvaluator;
 import org.springframework.security.acls.domain.AclAuthorizationStrategy;
 import org.springframework.security.acls.domain.AclAuthorizationStrategyImpl;
@@ -27,25 +32,33 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatchers;
+import org.springframework.util.AntPathMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -58,7 +71,7 @@ class SecurityConfiguration {
    */
   @Bean
   @Order(1)
-  public SecurityFilterChain authorizationFilterChain(HttpSecurity http, OAuth2UserService<OidcUserRequest, OidcUser> service) throws Exception {
+  public SecurityFilterChain authorizationFilterChain(HttpSecurity http, OAuth2UserService<OidcUserRequest, OidcUser> service, @Qualifier("authMatcher") AuthenticationManagerResolver<HttpServletRequest> tokenMatcher) throws Exception {
     http
         .authorizeHttpRequests(
             request -> request.anyRequest().authenticated()
@@ -68,9 +81,10 @@ class SecurityConfiguration {
         /*
         Resource server must be placed above authorization server
         https://github.com/spring-projects/spring-security/issues/16406#issuecomment-2593143711
+        Additionally, must manually bind JWT decoder
         */
         .oauth2ResourceServer(
-            resourceServer -> resourceServer.opaqueToken(Customizer.withDefaults())
+            server -> server.authenticationManagerResolver(tokenMatcher)
         )
         .oauth2AuthorizationServer(
             authorizationServer -> {
@@ -94,8 +108,7 @@ class SecurityConfiguration {
   @Bean
   @Order(3)
   public SecurityFilterChain statefulFilterChain(HttpSecurity http, OAuth2UserService<OidcUserRequest, OidcUser> service) throws Exception {
-    http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+    http.csrf(CsrfConfigurer::spa)
         .authorizeHttpRequests(auth -> auth.requestMatchers("/api/internal/**").hasRole("USER")
             .anyRequest().permitAll()
         )
@@ -176,6 +189,19 @@ class SecurityConfiguration {
   static LookupStrategy lookupStrategy(JdbcTemplate dataSource, AclCache cache,
       AclAuthorizationStrategy aclAuthorizationStrategy, PermissionGrantingStrategy permissionGrantingStrategy) {
     return new BasicLookupStrategy(dataSource.getDataSource(), cache, aclAuthorizationStrategy, permissionGrantingStrategy);
+  }
+
+  @Bean
+  static RoleHierarchy roleHierarchy() {
+    return RoleHierarchyImpl.withDefaultRolePrefix()
+        .role("ADMIN").implies("MANAGER").role("MANAGER").implies("USER").build();
+  }
+
+  @Bean
+  static MethodSecurityExpressionHandler handler(AclPermissionEvaluator evaluator){
+    final DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+    expressionHandler.setPermissionEvaluator(evaluator);
+    return expressionHandler;
   }
 
 

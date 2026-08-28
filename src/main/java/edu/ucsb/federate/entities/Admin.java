@@ -1,48 +1,31 @@
-package edu.ucsb.federate.authentication;
+package edu.ucsb.federate.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.ucsb.federate.entities.UserEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.time.Instant;
+import jakarta.persistence.Table;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString.Exclude;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@Table(name = "admins")
+@AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@ToString
 @NoArgsConstructor
-@AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class ApiKey {
-
+@Builder
+public class Admin {
   @Id
-  private String hash;
+  private String email;
 
-  @JsonIgnore
-  @JoinColumn(name = "owner_id")
-  @ManyToOne
-  @Exclude
-  private UserEntity owner;
-
-  @CreatedDate
-  private Instant issuedAt;
-
-  /*
-   * https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
-   */
   @Override
   public final boolean equals(Object o) {
     if (this == o) {
@@ -60,8 +43,8 @@ public class ApiKey {
     if (thisEffectiveClass != oEffectiveClass) {
       return false;
     }
-    ApiKey apiKey = (ApiKey) o;
-    return getHash() != null && Objects.equals(getHash(), apiKey.getHash());
+    Admin admin = (Admin) o;
+    return getEmail() != null && Objects.equals(getEmail(), admin.getEmail());
   }
 
   @Override
@@ -69,5 +52,4 @@ public class ApiKey {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
   }
-
 }

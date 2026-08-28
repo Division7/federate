@@ -1,0 +1,61 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1787860065178-5",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "pk_apikey"
+                    },
+                    "name": "hash",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "owner_id",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "issued_at",
+                    "type": "DATETIME(6)"
+                  }
+                }
+              ],
+              "tableName": "api_key"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787860065178-6",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "owner_id",
+              "baseTableName": "api_key",
+              "constraintName": "FK_APIKEY_ON_OWNER",
+              "referencedColumnNames": "id",
+              "referencedTableName": "users"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

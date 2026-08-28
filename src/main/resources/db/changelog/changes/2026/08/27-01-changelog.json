@@ -1,0 +1,58 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1787859661159-5",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "pk_admins"
+                    },
+                    "name": "email",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "admins"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "1787859661159-7",
+        "author": "djens",
+        "objectQuotingStrategy": "QUOTE_ONLY_RESERVED_WORDS",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "pk_managers"
+                    },
+                    "name": "email",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "managers"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

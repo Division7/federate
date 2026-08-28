@@ -164,6 +164,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security-oauth2-resource-server</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.re2j</groupId>
+      <artifactId>re2j</artifactId>
+      <version>1.8</version>
+    </dependency>
   </dependencies>
 
   <build>
