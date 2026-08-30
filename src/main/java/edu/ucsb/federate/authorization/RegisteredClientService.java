@@ -5,10 +5,12 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
@@ -26,7 +28,7 @@ public class RegisteredClientService {
     this.registeredClientRepository = registeredClientRepository;
   }
 
-//  @PreAuthorize("hasPermission(#id, 'edu.ucsb.federate.authorization.CredentialBlueprint', 'CREATE')")
+  @PreAuthorize("hasPermission(#id, 'edu.ucsb.federate.authorization.CredentialBlueprint', 'CREATE')")
   public MintedCredential createCredentials(Long id, String domain){
     CredentialBlueprint selectedBlueprint = credentialBlueprintRepository.findById(id).orElseThrow();
     if(selectedBlueprint.getDomains().stream().noneMatch(pattern -> pattern.matches(domain))){
@@ -47,7 +49,7 @@ public class RegisteredClientService {
         .redirectUri(domain)
         .authorizationGrantTypes((types) -> types.addAll(Set.of(AuthorizationGrantType.AUTHORIZATION_CODE, AuthorizationGrantType.REFRESH_TOKEN)))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .scopes((scopes) -> scopes.addAll(Set.of("openid", "profile")))
+        .scopes((scopes) -> scopes.addAll(Set.of(OidcScopes.OPENID, OidcScopes.PROFILE, OidcScopes.EMAIL)))
         .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).requireProofKey(false).build())
         .build();
     registeredClientRepository.save(newClient);

@@ -1,5 +1,6 @@
 package edu.ucsb.federate.authorization;
 
+import com.google.re2j.PatternSyntaxException;
 import edu.ucsb.federate.entities.CredentialBlueprint;
 import java.util.Arrays;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,13 @@ public class BlueprintController {
   }
 
   @PostMapping("")
-  public ResponseEntity<CredentialBlueprint> createBlueprint(String githubOrganization, @RequestBody BlueprintRequest blueprintRequest){
-    CredentialBlueprint blueprint = credentialBlueprintService.createCredentialBlueprint(githubOrganization, Arrays.stream(blueprintRequest.domainPatterns).toList(), Arrays.stream(blueprintRequest.repositoryPatterns).toList());
+  public ResponseEntity<?> createBlueprint(String githubOrganization, @RequestBody BlueprintRequest blueprintRequest){
+    CredentialBlueprint blueprint;
+    try {
+      blueprint = credentialBlueprintService.createCredentialBlueprint(githubOrganization, Arrays.stream(blueprintRequest.domainPatterns).toList(), Arrays.stream(blueprintRequest.repositoryPatterns).toList());
+    } catch (PatternSyntaxException e) {
+      return ResponseEntity.badRequest().body("Illegal pattern: " + e.getMessage());
+    }
     return ResponseEntity.ok(blueprint);
   }
 

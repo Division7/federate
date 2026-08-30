@@ -2,6 +2,7 @@ package edu.ucsb.federate.authentication;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import edu.ucsb.federate.authorization.OIDCTokenCustomizer;
 import edu.ucsb.federate.entities.AdminRepository;
 import edu.ucsb.federate.entities.ManagerRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,8 @@ import org.springframework.security.oauth2.jwt.JwtClaimValidator;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationProvider;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.oauth2.server.resource.authentication.OpaqueTokenAuthenticationProvider;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
@@ -100,5 +103,10 @@ public class AuthConfiguration {
   @Bean
   public OAuth2TokenValidator<Jwt> subValidator(){
     return new JwtClaimValidator<List<String>>(JwtClaimNames.SUB, (claim) -> true);
+  }
+
+  @Bean
+  public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer(){
+    return new OIDCTokenCustomizer();
   }
 }

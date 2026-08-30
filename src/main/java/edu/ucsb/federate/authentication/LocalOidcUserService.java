@@ -49,6 +49,11 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
         authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
       }
 
+      /*
+       Spring Security neglected to add the AUTHORIZATION_CODE_AUTHORITY to the OIDC Service:
+       See https://github.com/spring-projects/spring-security/issues/19140
+       Can likely be removed when this PR is closed: https://github.com/spring-projects/spring-security/pull/19141/changes
+       */
       authorities.add(FactorGrantedAuthority.fromAuthority(FactorGrantedAuthority.AUTHORIZATION_CODE_AUTHORITY));
 
       LocalOidcUser user;
